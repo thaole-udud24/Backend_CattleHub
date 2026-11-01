@@ -175,7 +175,7 @@ async function update(req, id, body) {
   if (body.breedId && String(body.breedId) !== String(c.breedId)) await assertBreedSelectable(body.breedId);
 
   const before = snapshot(c);
-  const { code, birthDate, joinDate, penId, ...rest } = body;
+  const { code: _code, birthDate, joinDate, penId, ...rest } = body;
   for (const [k, v] of Object.entries(rest)) c[k] = v === '' ? undefined : v;
   if (birthDate) c.birthDate = startOfDayVN(birthDate);
   if (joinDate) c.joinDate = startOfDayVN(joinDate);

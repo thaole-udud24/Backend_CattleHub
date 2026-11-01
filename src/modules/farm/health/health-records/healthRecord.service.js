@@ -84,7 +84,7 @@ async function applyConclusion(r, { actorId, session }) {
 async function create(req, body) {
   const cattle = await findCattleByCode(body.cattleCode);
   assertOperable(cattle); // Đã bán/Đã chết/Không còn trong đàn => chặn
-  const { cattleCode, examDate, ...rest } = body;
+  const { cattleCode: _cattleCode, examDate, ...rest } = body;
 
   const { record, change } = await withTransaction(async (session) => {
     const [r] = await HealthRecord.create([{ ...rest, cattleId: cattle._id, cattleCode: cattle.code, examDate: startOfDayVN(examDate), createdBy: req.user._id }], { session });
@@ -112,7 +112,7 @@ async function update(req, id, body) {
   }
 
   const before = snapshot(r);
-  const { cattleCode, confirmAmendment, amendReason, examDate, ...rest } = body;
+  const { cattleCode: _cattleCode, confirmAmendment: _confirmAmendment, amendReason, examDate, ...rest } = body;
   for (const [k, v] of Object.entries(rest)) if (v !== undefined) r[k] = v === '' ? undefined : v;
   if (examDate) r.examDate = startOfDayVN(examDate);
   await r.save();
